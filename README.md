@@ -21,7 +21,7 @@ Tests run on Chromium, Firefox and WebKit.
 pages/          page objects (BasePage, HomePage, ContactPage, ShopPage, CartPage)
 fixtures/       makes the page objects available to the tests
 tests/          the test files
-utils/          config, test data and price helpers
+utils/          config, test data, price helpers and cost calculator
 test-data/      products and quantities for test case 3
 .github/        GitHub Actions pipeline
 ```
@@ -85,6 +85,13 @@ variable is used, which is how the CI pipeline passes its settings in.
 - **Prices in test case 3.** Each cart price is checked against the expected price in `test-data/products.json`
   and against the price shown on the shop page. Soft assertions are used so all wrong values are reported in
   one run instead of stopping at the first one.
+- **Cost calculation in test case 3.** The expected cost is worked out from the test data before the site is
+  opened (`utils/costCalculator.ts`): each item's cost is price x quantity, and the total is those costs added
+  up. The cart's subtotals and total are then compared with these calculated values. The test also checks the
+  assignment rule that the cart total equals the sum of the subtotals shown on screen. The two total checks
+  catch different problems: if the cart used a wrong price but added up its own numbers correctly, the
+  "sum of subtotals" check would still pass, but the calculated total would not. The breakdown
+  (e.g. `2 x $10.99 = $21.98`) is shown in the HTML report under the test.
 - **Test data.** Contact details are generated for each run (`utils/testData.ts`) so runs don't reuse the same
   data.
 - **Navigation checks.** After clicking a menu link the URL is checked (`BasePage`), so if navigation fails the

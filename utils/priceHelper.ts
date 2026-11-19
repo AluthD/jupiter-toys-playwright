@@ -8,3 +8,8 @@ export function parsePrice(text: string): number {
 export function toCents(amount: number): number {
   return Math.round(amount * 100);
 }
+
+// Turns cents back into a display price, e.g. 11690 -> "$116.90" (used in report messages)
+export function formatCents(cents: number): string {
+  return `$${(cents / 100).toFixed(2)}`;
+}
