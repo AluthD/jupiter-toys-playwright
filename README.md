@@ -11,6 +11,7 @@ Site under test: http://jupiter.cloud.planittesting.com
 | 1 | `tests/contact.spec.ts` | Submit the empty contact form, check the error messages, fill the mandatory fields and check the errors are gone |
 | 2 | `tests/contact.spec.ts` | Fill the mandatory fields, submit and check the success message. Runs 5 times |
 | 3 | `tests/cart.spec.ts` | Buy 2 Stuffed Frog, 5 Fluffy Bunny and 3 Valentine Bear, then check each price, each subtotal and the total in the cart |
+| 4 (negative) | `tests/contact.spec.ts` | Enter an invalid email (`invalid-email`, `john@`, `@test.com`), submit, check the "Please enter a valid email" error, then correct it and check the error goes away |
 
 Tests run on Chromium, Firefox and WebKit.
 
@@ -43,7 +44,7 @@ copy .env.example .env
 npm test                 all tests, all browsers
 npm run test:chrome      Chromium only
 npm run test:headed      Chromium with the browser visible
-npm run test:contact     test cases 1 and 2
+npm run test:contact     test cases 1, 2 and 4
 npm run test:cart        test case 3
 npm run report           open the HTML report from the last run
 ```
@@ -65,6 +66,13 @@ variable is used, which is how the CI pipeline passes its settings in.
 
 ## Approach
 
+- **Playwright locators instead of CSS selectors.** Elements are found the way a user sees them: by role
+  and name (`getByRole('link', { name: 'Submit' })`), by form label (`getByLabel('Email')`) or by visible text
+  (`getByText('Please enter a valid email')`). These don't depend on ids or class names, which developers
+  change more often than the text on screen, and a locator that finds a field by its label also proves the
+  label is connected to the field.
+- **Negative test.** Test case 4 checks the form rejects badly formatted emails. It loops over a list of
+  invalid values, so another case is one more item in the list.
 - **Page Object Model.** Each page has its own class holding its locators and actions, so if the site changes
   only the page class needs updating. The menu is the same on every page, so it sits in `BasePage`.
 - **Fixtures.** The page objects are added to Playwright's `test` in `fixtures/pageFixtures.ts`. Tests just ask

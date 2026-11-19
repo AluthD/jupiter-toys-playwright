@@ -11,10 +11,12 @@ export class BasePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.homeLink = page.locator('#nav-home a');
-    this.shopLink = page.locator('#nav-shop a');
-    this.contactLink = page.locator('#nav-contact a');
-    this.cartLink = page.locator('#nav-cart a');
+    // exact: true so "Shop" doesn't also match the "Start Shopping" button
+    this.homeLink = page.getByRole('link', { name: 'Home', exact: true });
+    this.shopLink = page.getByRole('link', { name: 'Shop', exact: true });
+    this.contactLink = page.getByRole('link', { name: 'Contact', exact: true });
+    // the cart link text changes with the number of items, e.g. "Cart (3)"
+    this.cartLink = page.getByRole('link', { name: /^Cart/ });
   }
 
   // After each click the URL is checked, so a test fails here with a clear
