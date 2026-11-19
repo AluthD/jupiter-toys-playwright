@@ -1,0 +1,22 @@
+{
+  "name": "jupiter-toys-playwright",
+  "version": "1.0.0",
+  "description": "Playwright UI tests for the Planit Jupiter Toys assessment",
+  "author": "Chinthaka",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:chrome": "playwright test --project=chromium",
+    "test:headed": "playwright test --project=chromium --headed",
+    "test:contact": "playwright test tests/contact.spec.ts",
+    "test:cart": "playwright test tests/cart.spec.ts",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "dotenv": "^18.0.10",
+    "typescript": "^7.0.2"
+  }
+}
